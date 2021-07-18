@@ -113,9 +113,7 @@ def order_book():
     #Note that you can access the database session using g.session
 
     query = (g.session.query(Order).all())
-
-
-    return jsonify(result)
+    return jsonify(json_list = query.all())
 
 if __name__ == '__main__':
     app.run(port='5002')
