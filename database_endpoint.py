@@ -74,7 +74,6 @@ def trade():
         sig = content['sig']
         payload = content['payload']
         payload_str = json.dumps(payload)
-        print("hello")
 
         if payload['platform'] == 'Ethereum':
             # Generating Ethereum account
@@ -114,8 +113,7 @@ def order_book():
     #Note that you can access the database session using g.session
 
     query = (g.session.query(Order).all())
-    print(query)
-    return jsonify(json_list = query.all())
+    return jsonify(json_list = 1)
 
 if __name__ == '__main__':
     app.run(port='5002')
