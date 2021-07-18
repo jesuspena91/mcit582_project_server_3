@@ -32,6 +32,11 @@ def shutdown_session(response_or_exc):
 
 def log_message(d)
     # Takes input dictionary d and writes it to the Log table
+    new_log = Log( message=d )
+
+    g.session.add(new_log)
+    g.session.commit()
+
     pass
 
 """
@@ -65,14 +70,49 @@ def trade():
             
         #Your code here
         #Note that you can access the database session using g.session
+        result = False #Should only be true if signature validates
+        sig = content['sig']
+        payload = content['payload']
+        payload_str = json.dumps(payload)
 
-        
+        if payload['platform'] == 'Ethereum':
+            # Generating Ethereum account
+            eth_account.Account.enable_unaudited_hdwallet_features()
+            acct, mnemonic = eth_account.Account.create_with_mnemonic()
+            eth_pk = acct.address
+            eth_sk = acct.key
+
+            eth_encoded_msg = eth_account.messages.encode_defunct(text=payload_str)
+
+            if eth_account.Account.recover_message(eth_encoded_msg,signature=content['sig']) == payload['sender_pk']:
+                result = True
+        elif payload['platform']  == 'Algorand':
+
+            if algosdk.util.verify_bytes(payload_str.encode('utf-8'),content['sig'],payload['sender_pk']):
+                result = True
+
+        if result == True:
+            new_order = Order( sender_pk=payload['sender_pk'],
+                receiver_pk=payload['receiver_pk'], 
+                buy_currency=payload['buy_currency'], 
+                sell_currency=payload['sell_currency'], 
+                buy_amount=payload['buy_amount'], 
+                sell_amount=payload['sell_amount'] )
+            g.session.add(new_order)
+            g.session.commit()
+
+            return jsonify( True )
+        else:
+            log_message(json.dumps(payload))
+            return jsonify( False )
 
 
 @app.route('/order_book')
 def order_book():
     #Your code here
     #Note that you can access the database session using g.session
+
+    query = (g.session.query(Order).all())
 
 
     return jsonify(result)
