@@ -74,6 +74,7 @@ def trade():
         sig = content['sig']
         payload = content['payload']
         payload_str = json.dumps(payload)
+        print("hello")
 
         if payload['platform'] == 'Ethereum':
             # Generating Ethereum account
