@@ -118,9 +118,16 @@ def order_book():
 
     for order in query:
         temp_dict['sender_pk'] = order['sender_pk']
+        temp_dict['receiver_pk'] = order['receiver_pk']
+        temp_dict['buy_currency'] = order['buy_currency']
+        temp_dict['sell_currency'] = order['sell_currency']
+        temp_dict['buy_amount'] = order['buy_amount']
+        temp_dict['sell_amount'] = order['sell_amount']
+        temp_dict['signature'] = order['signature']
+
         temp_list.append(temp_dict)
 
-    return jsonify(json_list = temp_list)
+    return jsonify(temp_list)
 
 if __name__ == '__main__':
     app.run(port='5002')
