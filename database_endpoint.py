@@ -112,7 +112,8 @@ def order_book():
     #Your code here
     #Note that you can access the database session using g.session
 
-    temp_dict = {}
+    temp_dict = {'sender_pk':'sender_pk','receiver_pk':'receiver_pk','buy_currency':'buy_currency',
+        'sell_currency':'sell_currency','buy_amount':0,'sell_amount':0,'signature':'signature'}
     temp_list = []
     query = (g.session.query(Order).all())
 
