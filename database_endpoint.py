@@ -114,7 +114,7 @@ def order_book():
 
     temp_dict = {'sender_pk':'sender_pk','receiver_pk':'receiver_pk','buy_currency':'buy_currency',
         'sell_currency':'sell_currency','buy_amount':0,'sell_amount':0,'signature':'signature'}
-    temp_list = []
+    data = []
     query = (g.session.query(Order).all())
 
     for order in query:
@@ -126,9 +126,9 @@ def order_book():
         temp_dict['sell_amount'] = order['sell_amount']
         temp_dict['signature'] = order['signature']
 
-        temp_list.append(temp_dict)
+        data.append(temp_dict)
 
-    return jsonify(json.dumps(temp_list))
+    return jsonify(json.dumps(data))
 
 if __name__ == '__main__':
     app.run(port='5002')
