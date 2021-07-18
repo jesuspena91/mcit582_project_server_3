@@ -112,8 +112,15 @@ def order_book():
     #Your code here
     #Note that you can access the database session using g.session
 
+    temp_dict = {}
+    temp_list = []
     query = (g.session.query(Order).all())
-    return jsonify(json_list = 1)
+
+    for order in query:
+        temp_dict['sender_pk'] = order['sender_pk']
+        temp_list.append(temp_dict)
+
+    return jsonify(json_list = temp_list)
 
 if __name__ == '__main__':
     app.run(port='5002')
