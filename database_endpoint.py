@@ -128,7 +128,7 @@ def order_book():
 
         temp_list.append(temp_dict)
 
-    return jsonify(temp_list)
+    return jsonify(json.dumps(temp_list))
 
 if __name__ == '__main__':
     app.run(port='5002')
