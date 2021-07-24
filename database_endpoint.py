@@ -118,14 +118,15 @@ def order_book():
 
     for order in query:
         temp_dict = {}
+        order_dict = json.loads(order)
 
-        temp_dict['sender_pk'] = order.sender_pk
-        temp_dict['receiver_pk'] = order.receiver_pk
-        temp_dict['buy_currency'] = order.buy_currency
-        temp_dict['sell_currency'] = order.sell_currency
-        temp_dict['buy_amount'] = order.buy_amount
-        temp_dict['sell_amount'] = order.sell_amount
-        temp_dict['signature'] = order.signature
+        temp_dict['sender_pk'] = order['sender_pk']
+        temp_dict['receiver_pk'] = order['receiver_pk']
+        temp_dict['buy_currency'] = order['buy_currency']
+        temp_dict['sell_currency'] = order['sell_currency']
+        temp_dict['buy_amount'] = order['buy_amount']
+        temp_dict['sell_amount'] = order['sell_amount']
+        temp_dict['signature'] = order['signature']
 
         data.append(temp_dict)
         g.session.commit()
