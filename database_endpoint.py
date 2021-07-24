@@ -134,4 +134,4 @@ def order_book():
     return jsonify(json.dumps(data))
 
 if __name__ == '__main__':
-    app.run(port='5003')
+    app.run(port='5002')
