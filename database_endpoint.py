@@ -120,6 +120,7 @@ def trade():
 def order_book():
     #Your code here
     #Note that you can access the database session using g.session
+    print('helllooooo')
 
     data = []
     
