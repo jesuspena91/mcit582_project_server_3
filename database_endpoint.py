@@ -120,7 +120,6 @@ def trade():
 def order_book():
     #Your code here
     #Note that you can access the database session using g.session
-    print('helllooooo')
 
     data = []
     
@@ -139,6 +138,10 @@ def order_book():
 
         data.append(temp_dict)
         g.session.commit()
+
+    print(data)
+    print("SPACE")
+    print(json.dumps(data))
 
     return jsonify(json.dumps(data))
 
