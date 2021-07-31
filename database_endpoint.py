@@ -107,7 +107,8 @@ def trade():
             buy_currency=payload['buy_currency'], 
             sell_currency=payload['sell_currency'], 
             buy_amount=payload['buy_amount'], 
-            sell_amount=payload['sell_amount'] )
+            sell_amount=payload['sell_amount'],
+            signature=content['sig'] )
         g.session.add(new_order)
         g.session.commit()
     else:
@@ -134,7 +135,7 @@ def order_book():
         temp_dict['sell_currency'] = order.sell_currency
         temp_dict['buy_amount'] = order.buy_amount
         temp_dict['sell_amount'] = order.sell_amount
-        temp_dict['sig'] = order.signature
+        temp_dict['signature'] = order.signature
 
         data.append(temp_dict)
         g.session.commit()
