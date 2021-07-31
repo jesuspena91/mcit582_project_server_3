@@ -142,7 +142,7 @@ def order_book():
 
     reponse = {'data': data}
 
-    return jsonify(json.dumps(reponse))
+    return jsonify(reponse)
 
 if __name__ == '__main__':
     app.run(port='5002')
