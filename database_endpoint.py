@@ -140,7 +140,9 @@ def order_book():
         data.append(temp_dict)
         g.session.commit()
 
-    return json.loads(data)
+    reponse = {'data': data}
+
+    return jsonify(json.dumps(reponse))
 
 if __name__ == '__main__':
     app.run(port='5002')
