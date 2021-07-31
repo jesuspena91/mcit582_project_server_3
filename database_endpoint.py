@@ -134,7 +134,7 @@ def order_book():
         temp_dict['sell_currency'] = order.sell_currency
         temp_dict['buy_amount'] = order.buy_amount
         temp_dict['sell_amount'] = order.sell_amount
-        temp_dict['signature'] = order.signature
+        temp_dict['sig'] = order.signature
 
         data.append(temp_dict)
         g.session.commit()
