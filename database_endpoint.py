@@ -1,3 +1,7 @@
+from os.path import dirname, abspath, join
+import sys
+sys.path.append('c:\python39\lib\site-packages')
+
 from flask import Flask, request, g
 from flask_restful import Resource, Api
 from sqlalchemy import create_engine, select, MetaData, Table
@@ -67,44 +71,48 @@ def trade():
             print( json.dumps(content) )
             log_message(content)
             return jsonify( False )
-            
-        #Your code here
-        #Note that you can access the database session using g.session
-        result = False #Should only be true if signature validates
-        sig = content['sig']
-        payload = content['payload']
-        payload_str = json.dumps(payload)
 
-        if payload['platform'] == 'Ethereum':
-            # Generating Ethereum account
-            eth_account.Account.enable_unaudited_hdwallet_features()
-            acct, mnemonic = eth_account.Account.create_with_mnemonic()
-            eth_pk = acct.address
-            eth_sk = acct.key
+    #Your code here
+    #Note that you can access the database session using g.session
 
-            eth_encoded_msg = eth_account.messages.encode_defunct(text=payload_str)
+    result = False #Should only be true if signature validates
+    sig = content['sig']
+    payload = content['payload']
+    payload_str = json.dumps(payload)
 
-            if eth_account.Account.recover_message(eth_encoded_msg,signature=content['sig']) == payload['sender_pk']:
-                result = True
-        elif payload['platform']  == 'Algorand':
+    print('dsfsdfsfdsdf')
 
-            if algosdk.util.verify_bytes(payload_str.encode('utf-8'),content['sig'],payload['sender_pk']):
-                result = True
+    if payload['platform'] == 'Ethereum':
+        # Generating Ethereum account
+        eth_account.Account.enable_unaudited_hdwallet_features()
+        acct, mnemonic = eth_account.Account.create_with_mnemonic()
+        eth_pk = acct.address
+        eth_sk = acct.key
+        print('ethereum')
 
-        if result == True:
-            new_order = Order( sender_pk=payload['sender_pk'],
-                receiver_pk=payload['receiver_pk'], 
-                buy_currency=payload['buy_currency'], 
-                sell_currency=payload['sell_currency'], 
-                buy_amount=payload['buy_amount'], 
-                sell_amount=payload['sell_amount'] )
-            g.session.add(new_order)
-            g.session.commit()
+        eth_encoded_msg = eth_account.messages.encode_defunct(text=payload_str)
+        if eth_account.Account.recover_message(eth_encoded_msg,signature=content['sig']) == payload['sender_pk']:
+            result = True
+            print('ethereum_passed')
+    elif payload['platform']  == 'Algorand':
+        print('algorand')
+        if algosdk.util.verify_bytes(payload_str.encode('utf-8'),content['sig'],payload['sender_pk']):
+            result = True
+            print('algorand_passed')
+    
+    if result == True:
+        new_order = Order( sender_pk=payload['sender_pk'],
+            receiver_pk=payload['receiver_pk'], 
+            buy_currency=payload['buy_currency'], 
+            sell_currency=payload['sell_currency'], 
+            buy_amount=payload['buy_amount'], 
+            sell_amount=payload['sell_amount'] )
+        g.session.add(new_order)
+        g.session.commit()
+    else:
+        log_message(json.dumps(payload))
 
-            return jsonify( True )
-        else:
-            log_message(json.dumps(payload))
-            return jsonify( False )
+    return jsonify( True )
 
 
 @app.route('/order_book')
@@ -118,15 +126,14 @@ def order_book():
 
     for order in query:
         temp_dict = {}
-        order_dict = json.loads(order)
 
-        temp_dict['sender_pk'] = order['sender_pk']
-        temp_dict['receiver_pk'] = order['receiver_pk']
-        temp_dict['buy_currency'] = order['buy_currency']
-        temp_dict['sell_currency'] = order['sell_currency']
-        temp_dict['buy_amount'] = order['buy_amount']
-        temp_dict['sell_amount'] = order['sell_amount']
-        temp_dict['signature'] = order['signature']
+        temp_dict['sender_pk'] = order.sender_pk
+        temp_dict['receiver_pk'] = order.receiver_pk
+        temp_dict['buy_currency'] = order.buy_currency
+        temp_dict['sell_currency'] = order.sell_currency
+        temp_dict['buy_amount'] = order.buy_amount
+        temp_dict['sell_amount'] = order.sell_amount
+        temp_dict['signature'] = order.signature
 
         data.append(temp_dict)
         g.session.commit()
