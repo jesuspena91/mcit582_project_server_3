@@ -99,6 +99,7 @@ def trade():
         if algosdk.util.verify_bytes(payload_str.encode('utf-8'),content['sig'],payload['sender_pk']):
             result = True
             print('algorand_passed')
+            print('bfdgdfgfdsgdgdfs')
     
     if result == True:
         new_order = Order( sender_pk=payload['sender_pk'],
